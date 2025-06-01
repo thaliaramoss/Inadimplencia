@@ -24,11 +24,19 @@ st.set_page_config(
 # Carregar Dataset
 @st.cache_data
 def carregar_dados():
-    # Carrega do Hugging Face uma vez só
-    dataset = load_dataset('thzliaa/inadimplencia')
-    # Transforma em pandas DataFrame
-    df = dataset['train'].to_pandas()
-    return df
+    anos = ['2020', '2021', '2022', '2023', '2024']
+    df_list = []
+
+    for ano in anos:
+        dataset = load_dataset(
+            "thzliaa/inadimplencia",
+            data_dir=f"planilha 5 anos/{ano}"
+        )
+        df = dataset['train'].to_pandas()
+        df['ano'] = ano  
+        df_list.append(df)
+
+    return pd.concat(df_list, ignore_index=True)
 
 df = carregar_dados()
 
