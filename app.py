@@ -30,7 +30,8 @@ def carregar_dados():
     for ano in anos:
         dataset = load_dataset(
             "Andrea1120/Teste1",
-            data_dir=f"planilha 5 anos/{ano}" #Colocar aqui o nome da pasta onde estão os arquivos por ano
+            data_files={ "train": f"planilha 5 anos/{ano}/dados.csv" },
+            split="train"
         )
         df = dataset['train'].to_pandas()
         df['ano'] = ano  
