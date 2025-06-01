@@ -29,8 +29,8 @@ def carregar_dados():
 
     for ano in anos:
         dataset = load_dataset(
-            "thzliaa/inadimplencia",
-            data_dir=f"planilha 5 anos/{ano}"
+            "Andrea1120/Teste1",
+            data_dir=f"planilha 5 anos/{ano}" #Colocar aqui o nome da pasta onde estão os arquivos por ano
         )
         df = dataset['train'].to_pandas()
         df['ano'] = ano  
