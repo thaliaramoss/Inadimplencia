@@ -1,8 +1,18 @@
 # app.py
+
 from xgboost import XGBClassifier
 import streamlit as st
 import pandas as pd
 import joblib
+
+# Configuração da página
+st.set_page_config(page_title="Score de Inadimplência", layout="centered")
+
+# Carregando o modelo treinado com pré-processamento embutido (pipeline)
+modelo = joblib.load("modelo_xgb_inadimplencia.pkl")
+
+st.title("📊 Score de Inadimplência")
+st.markdown("Preencha os dados para prever a probabilidade de inadimplência:")
 
 # Entradas do usuário
 porte = st.selectbox('Porte', [
@@ -60,10 +70,11 @@ if st.button("Calcular Probabilidade"):
         'vencido_acima_de_15_dias': vencido_acima_15
     }])
 
-        for col in ['porte', 'ocupacao', 'modalidade']:
-            le = LabelEncoder()
-            le.fit(df[col])
-            entrada[col] = le.transform(entrada[col])
+    # Certifique-se de que as colunas estão na ordem correta
+    expected_columns = ['ocupacao', 'porte', 'modalidade', 'origem', 'indexador', 
+                        'carteira_ativa', 'vencido_acima_de_15_dias']
+    entrada = entrada[expected_columns]
 
-        prob = modelo.predict_proba(entrada)[0][1]
-        st.success(f"🔮 Probabilidade de Inadimplência: {prob:.2%}")
+    # Faz a previsão
+    prob = modelo.predict_proba(entrada)[0][1]
+    st.success(f"🔮 Probabilidade de Inadimplência: {prob:.2%}")
